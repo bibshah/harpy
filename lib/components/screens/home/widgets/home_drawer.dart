@@ -29,18 +29,8 @@ class HomeDrawer extends StatelessWidget {
                 onTap: () async {
                   await app<HarpyNavigator>().state!.maybePop();
                   app<HarpyNavigator>().pushUserProfile(
-                    screenName: authBloc.authenticatedUser!.screenName,
+                    screenName: authBloc.authenticatedUser!.handle,
                   );
-                },
-              ),
-
-              // compose tweet
-              ListTile(
-                leading: const Icon(FeatherIcons.feather),
-                title: const Text('Compose tweet'),
-                onTap: () async {
-                  await app<HarpyNavigator>().state!.maybePop();
-                  app<HarpyNavigator>().pushComposeScreen();
                 },
               ),
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:harpy/api/api.dart';
 import 'package:harpy/components/components.dart';
 import 'package:harpy/core/core.dart';
 import 'package:harpy/harpy_widgets/harpy_widgets.dart';
@@ -51,7 +52,9 @@ class MediaTimelineMediaWidget extends StatelessWidget {
   }
 
   Widget _buildGif(BuildContext context) {
-    return AspectRatio(
+    final autoplay = app<MediaPreferences>().shouldAutoplayMedia;
+
+    final child = AspectRatio(
       aspectRatio: entry.media!.aspectRatioDouble,
       child: HarpyGifPlayer.fromController(
         VideoPlayerController.network(
@@ -61,11 +64,20 @@ class MediaTimelineMediaWidget extends StatelessWidget {
         compact: buildCompactOverlay,
         thumbnail: entry.videoData!.thumbnailUrl,
         thumbnailAspectRatio: entry.videoData!.aspectRatioDouble,
-        autoplay: app<MediaPreferences>().shouldAutoplayMedia,
+        autoplay: autoplay,
         onGifTap: onVideoTap,
         onGifLongPress: () => _onLongPress(context),
       ),
     );
+
+    if (autoplay) {
+      return VisibilityChangeDetector(
+        key: Key(entry.videoData!.appropriateUrl!),
+        child: child,
+      );
+    } else {
+      return child;
+    }
   }
 
   Widget _buildVideo(BuildContext context) {
